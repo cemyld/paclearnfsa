@@ -6,7 +6,7 @@
 # Code contributions are welcome.
 # Modified by Cem Yildirim for CSC410 project
 from copy import copy
-from UnionFind import UnionFind
+from DFA.UnionFind import UnionFind
 
 class DFA:
     """This class represents a deterministic finite automaton."""
@@ -35,7 +35,7 @@ class DFA:
         self.current_state = start
         self.transitions = transitions
         if delta is None:
-            self.delta = lambda q,c: transitions[q][c]
+            self.delta = lambda q,c: self.transitions[q][c]
 #
 # Administrative functions:
 #
@@ -44,20 +44,20 @@ class DFA:
         """Displays all information about the DFA in an easy-to-read way. Not
         actually that easy to read if it has too many states.
         """
-        print ""
-        print "This DFA has %s states" % len(self.states)
-        print "States:", self.states
-        print "Alphabet:", self.alphabet
-        print "Starting state:", self.start
-        print "Accepting states:", self.accepts
-        print "Transition function:"
-        print "\t","\t".join(map(str, sorted(self.states)))
+        print("")
+        print("This DFA has %s states" % len(self.states))
+        print("States:", self.states)
+        print("Alphabet:", self.alphabet)
+        print("Starting state:", self.start)
+        print("Accepting states:", self.accepts)
+        print("Transition function:")
+        print("\t","\t".join(map(str,self.states)))
         for c in self.alphabet:
-            results = map(lambda x: self.delta(x, c), sorted(self.states))
-            print c, "\t", "\t".join(map(str, results))
-        print "Current state:", self.current_state
-        print "Currently accepting:", self.status()
-        print ""
+            results = [self.delta(x, c) for x in self.states]
+            print(c, "\t", "\t".join(map(str, results)))
+        print("Current state:", self.current_state)
+        print("Currently accepting:", self.status())
+        print("")
 
     def validate(self):
         """Checks that:
@@ -158,7 +158,7 @@ class DFA:
                 if reached[next] == False:
                     reached[next] = True
                     to_process.append(next)
-        return filter(lambda q: reached[q], self.states)
+        return [q for q in self.states if reached[q]]
 
     def reachable(self):
         """Returns the reachable subset of the DFA's states."""
@@ -180,7 +180,7 @@ class DFA:
         classes = []
         if self.accepts != []:
             classes.append(self.accepts)
-        nonaccepts = filter(lambda x: x not in self.accepts, self.states)
+        nonaccepts = [x for x in self.states if x not in self.accepts]
         if nonaccepts != []:
             classes.append(nonaccepts)
         while changed:
@@ -605,8 +605,8 @@ def modular_zero(n, base=2):
     parameter "base" if you want something other than binary. The empty string is also
     included in the DFA's language.
     """
-    states = range(n)
-    alphabet = map(str, range(base))
+    states = list(range(n))
+    alphabet = list(map(str, list(range(base))))
     delta = lambda q, c: ((q*base+int(c)) % n)
     start = 0
     accepts = [0]
@@ -619,9 +619,9 @@ def random(states_size, alphabet_size, acceptance=0.5):
     the states should be accepting.
     """
     import random
-    states = range(states_size)
+    states = list(range(states_size))
     start = 0
-    alphabet = range(alphabet_size)
+    alphabet = list(range(alphabet_size))
     accepts = random.sample(states, int(acceptance*states_size))
     tt = {}
     for q in states:

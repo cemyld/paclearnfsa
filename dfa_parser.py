@@ -1,23 +1,25 @@
-import DFA
+import DFA.DFA as DFA
 
 '''
-{
-    'accepts': {}
-    'start' : ''
-    'transitions': { state: {token:next_state, ...}, ...}
-    EXAMPLE:
-    {'accepts': {1},
-     'start': {0},
-     'transitions': {0: {0: 0, 1: 1}, 1: {0: 1, 1: 0}}}
-}
+{'accepts': {}
+'start' : ''
+'transitions': { state: {token:next_state, ...}, ...}
+EXAMPLE:
+{'accepts': {1},
+ 'start': {0},
+ 'transitions': {0: {0: 0, 1: 1}, 1: {0: 1, 1: 0}}}
 '''
-def dfa_from_dict(dc):
-    accepts = set(dc['accepts'])
-    start = dc['start']
-    transitions = dc['transitions']
+
+
+def dfa_from_dict(dct):
+    accepts = set(dct['accepts'])
+    start = dct['start']
+    transitions = dct['transitions']
     states = transitions.keys()
-    alphabet = {token for state in transitions for token in transitions[state]}
+    alphabet = {token for state_transitions in transitions.values() for token in state_transitions.keys()}
     return DFA.DFA(states=states, alphabet=alphabet, transitions=transitions, start=start, accepts=accepts)
+
+
 def dfa_to_dict(dfa):
     dct = {}
     dct['accepts'] = dfa.accepts

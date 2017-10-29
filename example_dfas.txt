@@ -13,3 +13,35 @@
 {'accepts': {2, 3, 5},
  'start': 0,
  'transitions': {0: {'a': 1, 'b': 2}, 1: {'a': 3}, 3: {'a': 4}, 4: {'a': 5}}}
+
+
+#sample prefix tree acceptor
+{'accepts': {'aa', 'aaa', 'aaab', 'aba', 'b', 'babab'},
+ 'start': 'start',
+ 'transitions': {'a': {'a': 'aa', 'b': 'ab'},
+  'aa': {'a': 'aaa'},
+  'aaa': {'b': 'aaab'},
+  'aaab': {},
+  'ab': {'a': 'aba'},
+  'aba': {},
+  'b': {'a': 'ba'},
+  'ba': {'b': 'bab'},
+  'bab': {'a': 'baba'},
+  'baba': {'b': 'babab'},
+  'babab': {},
+  'sink': {},
+  'start': {'a': 'a', 'b': 'b'}}}
+
+
+#some dfa examples from http://cs.wellesley.edu/~cs235/fall09/lectures/14_DFA_operations/14_DFA_operations_revised.pdf
+
+#dfa5
+{
+    'accepts': {K},
+    'start': K,
+    'transitions': {
+    K: {'a': L, 'b': M},
+    L: {'a': M, 'b': K},
+    M: {'a': M, 'b': M}
+    }
+}

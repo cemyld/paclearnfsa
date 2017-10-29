@@ -9,6 +9,8 @@ def get_graph(dfa):
     G.node_attr['shape'] = 'circle'
 
     for state, transition_dict in dfa.transitions.items():
+        if state == 'sink':
+            continue
         # add node
         G.add_node(state)
         # add edges

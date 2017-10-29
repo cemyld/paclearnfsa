@@ -11,7 +11,7 @@ EXAMPLE:
 '''
 
 
-def dfa_from_dict(dct):
+def from_dict(dct):
     accepts = set(dct['accepts'])
     start = dct['start']
     transitions = dct['transitions']
@@ -20,7 +20,7 @@ def dfa_from_dict(dct):
     return DFA.DFA(states=states, alphabet=alphabet, transitions=transitions, start=start, accepts=accepts)
 
 
-def dfa_to_dict(dfa):
+def to_dict(dfa):
     dct = {}
     dct['accepts'] = dfa.accepts
     dct['start'] = dfa.start

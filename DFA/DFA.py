@@ -36,11 +36,30 @@ class DFA:
         self.alphabet = set(alphabet)
         self.current_state = start
         self.transitions = transitions
-        if delta is None:
-            self.states = self.states.union({'sink'})
+
+
+        if transitions is None:
+            self.transitions = {}
+            for state in self.states:
+                state_transitions = {}
+                for token in self.alphabet:
+                    if self.delta(state, token) != 'sink':
+                        state_transitions[token] = self.delta(state, token)
+                self.transitions[state] = state_transitions
+        # change empty string state to 'start'
+        if self.start == '':
+            self.start = 'start'
+            self.current_start = self.start
+            self.states = self.states.difference({''}).union({'start'})
+            if '' in self.accepts:
+                self.accepts = self.accepts.difference({''}).union({'start'})
+            self.transitions['start'] = self.transitions['']
+            self.transitions.pop('', None)
+            self.delta = None
+        if self.delta is None:
             self.delta = lambda q, c: self.transitions[q][c] if (
                 q in self.transitions and c in self.transitions[q]) else 'sink'
-#
+        self.states = self.states.difference({'sink'})
 # Administrative functions:
 #
 
@@ -609,7 +628,7 @@ def from_word_list(language, alphabet):
             if prefix not in states:
                 states.append(prefix)
     fwl = copy(states)
-
+    print(fwl)
     def delta(q, c):
         next = q + c
         if next in fwl:

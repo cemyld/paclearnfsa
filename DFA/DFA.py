@@ -37,6 +37,7 @@ class DFA:
         self.current_state = start
         self.transitions = transitions
         if delta is None:
+            self.states = self.states.union({'sink'})
             self.delta = lambda q, c: self.transitions[q][c] if (
                 q in self.transitions and c in self.transitions[q]) else 'sink'
 #
@@ -78,7 +79,7 @@ class DFA:
 
     def copy(self):
         """Returns a copy of the DFA. No data is shared with the original."""
-        return DFA(self.states, self.alphabet, self.delta, self.start, self.accepts)
+        return DFA(self.states, self.alphabet, self.start, self.accepts, self.delta, self.transitions)
 
 #
 # Simulating execution:
@@ -450,7 +451,7 @@ class DFA:
                     if candidate > longest:
                         longest = candidate
             return longest
-        return long_path(self.start, 0, None)
+        return long_path(self.start, 0, -1)
 
     def DFCA_minimize(self, l=None):
         """DFCA minimization"

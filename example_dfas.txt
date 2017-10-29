@@ -35,6 +35,27 @@
 
 #some dfa examples from http://cs.wellesley.edu/~cs235/fall09/lectures/14_DFA_operations/14_DFA_operations_revised.pdf
 
+#dfa1
+{
+	'accepts': {'A'},
+	'start': 'A',
+	'transitions': {
+    'A': {'a': 'B', 'b': 'A'},
+    'B': {'a': 'A', 'b': 'B'}
+    }
+}
+
+#dfa3
+{
+	'accepts': {'E', 'F'},
+	'start': 'E',
+	'transitions': {
+    'E': {'a': 'E', 'b': 'F'},
+    'F': {'a': 'G', 'b': 'F'},
+    'G': {'a': 'G', 'b': 'G'}
+    }
+}
+
 #dfa5
 {
     'accepts': {'K'},
@@ -45,3 +66,40 @@
     'M': {'a': 'M', 'b': 'M'}
     }
 }
+
+#dfa6
+{
+    'accepts': {'O'},
+    'start': 'N',
+    'transitions': {
+    'N': {'a': 'O', 'b': 'P'},
+    'O': {'a': 'P', 'b': 'N'},
+    'P': {'a': 'P', 'b': 'P'}
+    }
+}
+
+#dfa7
+{
+    'accepts': {'Q','S'},
+    'start': 'Q',
+    'transitions': {
+    'Q': {'a': 'R', 'b': 'T'},
+    'R': {'a': 'T', 'b': 'S'},
+    'S': {'a': 'R', 'b': 'U'},
+    'T': {'a': 'T', 'b': 'T'},
+    'U': {'a': 'T', 'b': 'T'}
+    }
+}
+
+#dfa8
+{
+    'accepts': {'V','X'},
+    'start': 'X',
+    'transitions': {
+    'V': {'a': 'Y', 'b': 'Z'},
+    'W': {'a': 'Z', 'b': 'V'},
+    'X': {'a': 'W', 'b': 'Z'},
+    'Y': {'a': 'Z', 'b': 'X'},
+    'Z': {'a': 'Z', 'b': 'Z'}
+    }
+} 

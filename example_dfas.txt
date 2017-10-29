@@ -37,11 +37,11 @@
 
 #dfa5
 {
-    'accepts': {K},
-    'start': K,
+    'accepts': {'K'},
+    'start': 'K',
     'transitions': {
-    K: {'a': L, 'b': M},
-    L: {'a': M, 'b': K},
-    M: {'a': M, 'b': M}
+    'K': {'a': 'L', 'b': 'M'},
+    'L': {'a': 'M', 'b': 'K'},
+    'M': {'a': 'M', 'b': 'M'}
     }
 }

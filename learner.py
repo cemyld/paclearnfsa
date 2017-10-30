@@ -114,7 +114,8 @@ class Learner:
             dfa.accepts.add(red_state)
             dfa.accepts.remove(blue_state)
         for token in self.alphabet:
-            if token in transitions[blue_state]:
+            # print(token, transitions[blue_state], self.alphabet)
+            if blue_state in transitions and token in transitions[blue_state]:
                 if token in transitions[red_state]:
                     dfa = self.rpni_fold(
                         dfa, transitions[red_state][token], transitions[blue_state][token])
@@ -150,7 +151,7 @@ class Learner:
                 temp_dfa = self.rpni_merge(deepcopy(dfa), red, blue)
                 if rpni_compatible(temp_dfa, neg_examples):
                     print('compatible')
-                    embed()
+                    # embed()
                     if blue in self.blues:
                         self.blues.remove(blue)
                     dfa = temp_dfa

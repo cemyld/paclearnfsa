@@ -31,42 +31,30 @@ class DFA:
         """
         self.states = set(states)
         self.start = start
-        self.delta = delta
         self.accepts = set(accepts)
         self.alphabet = set(alphabet)
         self.current_state = start
         self.transitions = transitions
 
-
-        if transitions is None:
-            self.transitions = {}
-            for state in self.states:
-                state_transitions = {}
-                for token in self.alphabet:
-                    if self.delta(state, token) != 'sink':
-                        state_transitions[token] = self.delta(state, token)
-                self.transitions[state] = state_transitions
         # change empty string state to 'start'
-        if self.start == '':
-            self.start = 'start'
-            self.current_start = self.start
-            self.states = self.states.difference({''}).union({'start'})
-            if '' in self.accepts:
-                self.accepts.remove('')
-                self.accepts.add('start')
-            self.transitions['start'] = self.transitions['']
-            del self.transitions['']
-            self.delta = lambda q, c: self.transitions[q][c] if (
-                q in self.transitions and c in self.transitions[q]) else 'sink'
-            print('delta_init')
-            self.states.remove('sink')
+        # if self.start == '':
+        #     self.start = 'start'
+        #     self.current_start = self.start
+        #     self.states = self.states.difference({''}).union({'start'})
+        #     if '' in self.accepts:
+        #         self.accepts.remove('')
+        #         self.accepts.add('start')
+        #     self.transitions['start'] = self.transitions['']
+        #     del self.transitions['']
+        #     self.states.remove('sink')
 # Administrative functions:
 #
-    # def delta(self, q, c):
-    #     if q in self.transitions and c in self.transitions[q]:
-    #         return self.transitions[q][c]
-    #     else:
-    #         return 'sink'
+
+    def delta(self, q, c):
+        if q in self.transitions and c in self.transitions[q]:
+            return self.transitions[q][c]
+        else:
+            return 'sink'
 
     def pretty_print(self):
         """Displays all information about the DFA in an easy-to-read way. Not
@@ -624,22 +612,29 @@ def inverse(D):
 def from_word_list(language, alphabet):
     """Constructs an unminimized DFA accepting the given finite language."""
     accepts = language
-    start = ''
-    sink = 'sink'
-    states = [start, sink]
+    start = 'start'
+    states = []
+    transitions = {}
     for word in language:
         for i in range(len(word)):
             prefix = word[:i + 1]
             if prefix not in states:
                 states.append(prefix)
-    fwl = copy(states)
-    def delta(q, c):
-        next = q + c
-        if next in fwl:
-            return next
-        else:
-            return sink
-    return DFA(states=states, alphabet=alphabet, delta=delta, start=start, accepts=accepts)
+
+    for state in states:
+        for token in alphabet:
+            if state + token in states:
+                if state not in transitions:
+                    transitions[state] = {}
+                transitions[state][token] = state + token
+    states.append(start)
+    transitions[start] = {}
+    if 'a' in states:
+        transitions[start]['a'] = 'a'
+    if 'b' in states:
+        transitions[start]['b'] = 'b'
+
+    return DFA(states=states, alphabet=alphabet, delta=None, start=start, accepts=accepts, transitions=transitions)
 
 
 def modular_zero(n, base=2):

@@ -5,7 +5,7 @@
 # Contact: andrewbadr@gmail.com
 # Code contributions are welcome.
 # Modified by Cem Yildirim for CSC410 project
-from copy import copy
+from copy import deepcopy
 from DFA.UnionFind import UnionFind
 
 
@@ -52,16 +52,21 @@ class DFA:
             self.current_start = self.start
             self.states = self.states.difference({''}).union({'start'})
             if '' in self.accepts:
-                self.accepts = self.accepts.difference({''}).union({'start'})
+                self.accepts.remove('')
+                self.accepts.add('start')
             self.transitions['start'] = self.transitions['']
-            self.transitions.pop('', None)
-            self.delta = None
-        if self.delta is None:
+            del self.transitions['']
             self.delta = lambda q, c: self.transitions[q][c] if (
                 q in self.transitions and c in self.transitions[q]) else 'sink'
-        self.states = self.states.difference({'sink'})
+            print('delta_init')
+            self.states.remove('sink')
 # Administrative functions:
 #
+    # def delta(self, q, c):
+    #     if q in self.transitions and c in self.transitions[q]:
+    #         return self.transitions[q][c]
+    #     else:
+    #         return 'sink'
 
     def pretty_print(self):
         """Displays all information about the DFA in an easy-to-read way. Not
@@ -98,7 +103,7 @@ class DFA:
 
     def copy(self):
         """Returns a copy of the DFA. No data is shared with the original."""
-        return DFA(self.states, self.alphabet, self.start, self.accepts, self.delta, self.transitions)
+        return DFA(deepcopy(self.states), deepcopy(self.alphabet), deepcopy(self.start), deepcopy(self.accepts), deepcopy(self.delta), deepcopy(self.transitions))
 
 #
 # Simulating execution:
@@ -628,7 +633,6 @@ def from_word_list(language, alphabet):
             if prefix not in states:
                 states.append(prefix)
     fwl = copy(states)
-    print(fwl)
     def delta(q, c):
         next = q + c
         if next in fwl:

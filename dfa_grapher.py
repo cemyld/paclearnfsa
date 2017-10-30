@@ -31,3 +31,17 @@ def draw_dfa(dfa, filepath='dfa_graph.png'):
     G = get_graph(dfa)
     G.layout('dot')
     G.draw(filepath)
+
+def draw_dfa_colored(dfa, reds, blues, filepath='dfa_graph.png'):
+    G = get_graph(dfa)
+
+    #colorize reds
+    for state in reds:
+        n = G.get_node(state)
+        n.attr['color'] = 'red'
+    #colorize blues
+    for state in blues:
+        n = G.get_node(state)
+        n.attr['color'] = 'blue'
+    G.layout('dot')
+    G.draw(filepath)

@@ -96,7 +96,6 @@ class DFA:
 #
 # Simulating execution:
 #
-
     def input(self, char):
         """Updates the DFA's current state based on a single character of input."""
         self.current_state = self.delta(self.current_state, char)
@@ -266,6 +265,17 @@ class DFA:
         self.accepts = new_accepts
         self.current_state = new_current_state
         return state_map
+
+    def remove_state(self, state):
+        if state is None:
+            return
+        if state in self.states:
+            self.states.remove(state)
+        if state in self.transitions:
+            del self.transitions[state]
+        for s, s_trans in self.transitions.items():
+            self.transitions[s] = {token: next_state for token,
+                                   next_state in s_trans.items() if not next_state == state}
 
     def minimize(self):
         """Classical DFA minimization, using the simple O(n^2) algorithm.

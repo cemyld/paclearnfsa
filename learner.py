@@ -2,6 +2,8 @@ import DFA.DFA as DFA
 from IPython import embed
 import dfa_grapher as dfg
 from copy import deepcopy
+import shutil
+import os
 # def merge(state1, state2, dfa):
 #     '''
 #     Merges state2 into state1 and removes state2
@@ -170,5 +172,10 @@ class Learner:
 
 
 if __name__ == '__main__':
+    dir = "rpni"
+    if os.path.exists(dir):
+        shutil.rmtree(dir, ignore_errors=True)
+    os.makedirs(dir)
+
     l = Learner()
     l.rpni(['aaa', 'aaba', 'bba', 'bbaba'], ['a', 'bb', 'aab', 'aba'])

@@ -2,6 +2,8 @@ import DFA.DFA as DFA
 from IPython import embed
 import dfa_grapher as dfg
 from copy import deepcopy
+import shutil
+import os
 # def merge(state1, state2, dfa):
 #     '''
 #     Merges state2 into state1 and removes state2
@@ -80,7 +82,6 @@ def get_state_order(dfa):
     for level in sorted(levelsDict):
         for value in levelsDict[level]:
             output.append(value)
-    print(output)
     return output
 
 
@@ -92,6 +93,7 @@ class Learner:
         self.draw_counter = 0
 
     def draw(self, dfa, filepath='rpni/rpni', operation=''):
+        print('Drawing {}'.format(self.draw_counter))
         dfg.draw_dfa_colored(dfa, self.reds, self.blues, '{}_{}_{}.png'.format(
             filepath, self.draw_counter, operation))
         self.draw_counter += 1
@@ -122,9 +124,15 @@ class Learner:
                 else:
                     transitions[red_state][token] = transitions[blue_state][token]
                     del transitions[blue_state][token]
-                    dfa.states.remove(blue_state)
+                    print('Removed state {}'.format(blue_state))
+                    if blue_state in self.blues:
+                        self.blues.remove(blue_state)
+                    if blue_state in self.reds:
+                        self.reds.remove(blue_state)
+                    dfa.remove_state(blue_state)
+
                     dfa.transitions = transitions
-                    self.draw(dfa=dfa, operation='fold')
+                    self.draw(dfa=dfa, operation='fold_red{}_blue{}'.format(red_state, blue_state))
 
         dfa.transitions = transitions
         return dfa
@@ -170,5 +178,10 @@ class Learner:
 
 
 if __name__ == '__main__':
+    dir = "rpni"
+    if os.path.exists(dir):
+        shutil.rmtree(dir, ignore_errors=True)
+    os.makedirs(dir)
+
     l = Learner()
     l.rpni(['aaa', 'aaba', 'bba', 'bbaba'], ['a', 'bb', 'aab', 'aba'])

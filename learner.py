@@ -86,13 +86,16 @@ def get_state_order(dfa):
 
 
 class Learner:
-    def __init__(self):
+    def __init__(self, drawsteps=False):
         self.alphabet = ['a', 'b']
         self.reds = None
         self.blues = None
         self.draw_counter = 0
+        self.drawsteps = drawsteps
 
     def draw(self, dfa, filepath='rpni/rpni', operation=''):
+        if not self.drawsteps:
+            return
         print('Drawing {}'.format(self.draw_counter))
         dfg.draw_dfa_colored(dfa, self.reds, self.blues, '{}_{}_{}.png'.format(
             filepath, self.draw_counter, operation))
@@ -183,5 +186,5 @@ if __name__ == '__main__':
         shutil.rmtree(dir, ignore_errors=True)
     os.makedirs(dir)
 
-    l = Learner()
+    l = Learner(drawsteps=True)
     l.rpni(['aaa', 'aaba', 'bba', 'bbaba'], ['a', 'bb', 'aab', 'aba'])

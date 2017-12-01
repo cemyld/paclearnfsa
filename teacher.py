@@ -76,7 +76,7 @@ class Teacher:
 
     def construct_char_set(self):
         '''Construct a characteristic set of the DFA, TODO'''
-        pass 
+        return
 
     def construct_T(self):
         '''Construct a tree T of given DFA'''
@@ -85,10 +85,12 @@ class Teacher:
         checked = []
         tree = Node(self.dfa.start)
 
-        for a in self.dfa.alphabet:
-            child = self.dfa.delta(start, a)
+        for trans in self.dfa.alphabet:
+            child = self.dfa.delta(tree.stat, trans)
+            if child == "sink":
+                continue
             unchecked.append(child)
-            start.add_child(Node(a, child))
+            tree.add_child(Node(child))
         
         for leaf in tree.children:
             self.construct_T_rec(self.dfa, leaf, unchecked, checked)
@@ -99,23 +101,25 @@ class Teacher:
         if node.stat in checked:
             return
         else:
-            for a in dfa.alphabet:
-                child = dfa.delta(start, a)
-                if child not in cdfhecked:
+            for trans in dfa.alphabet:
+                child = dfa.delta(node.stat, trans)
+                if child == "sink":
+                    continue
+                if child not in checked:
                     unchecked.append(child)
-                start.add_child(Node(a, child))
+                    node.add_child(Node(child))
 
             for leaf in node.children:
-                construct_T_rec(dfa, leaf, unchecked, checked)
+                self.construct_T_rec(dfa, leaf, unchecked, checked)
 
-    
 class Node(object):
     def __init__(self, stat):
         self.stat = stat
-        self.children = {}
+        self.children = []
 
-    def add_child(self, tansition, obj):
+    def add_child(self, obj):
         self.children.append(obj)
 
 
 
+if __name__ == '__main__':

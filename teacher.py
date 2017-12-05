@@ -1,5 +1,6 @@
 import DFA.DFA as DFA
 import random
+import dfa_parser as DFAParser
 
 
 max_iter_counter = 2000
@@ -78,43 +79,45 @@ class Teacher:
         '''Construct a characteristic set of the DFA, TODO'''
         return
 
-    def construct_T(self):
+    def construct_tree(self):
         '''Construct a tree T of given DFA'''
 
-        unchecked = []
         checked = []
-        tree = Node(self.dfa.start)
+        unchecked = []
+        node_list = []
+        start = Node(self.dfa.start)
+        unchecked.append(start.state)
+        self.construct_tree_rec(start, checked, unchecked, node_list)
+        return node_list 
 
-        for trans in self.dfa.alphabet:
-            child = self.dfa.delta(tree.stat, trans)
+
+    def construct_tree_rec(self, node, checked, unchecked, node_list):
+        '''recursive part'''
+        if len(unchecked) == 0:
+            return
+
+        unchecked.remove(node.state)
+        checked.append(node.state)
+
+        for alph in self.dfa.alphabet:
+            child = self.dfa.delta(node.state, alph)
             if child == "sink":
                 continue
-            unchecked.append(child)
-            tree.add_child(Node(child))
+            elif child in checked:
+                node.add_child({alph: child})
+            else:
+                unchecked.append(child)
+                node.add_child({alph: child})
+                self.construct_tree_rec(Node(child), checked, unchecked, node_list)
         
-        for leaf in tree.children:
-            self.construct_T_rec(self.dfa, leaf, unchecked, checked)
+        node_list.append(node)
+            
 
-        return tree
 
-    def construct_T_rec(self, dfa, node, unchecked, checked):
-        if node.stat in checked:
-            return
-        else:
-            for trans in dfa.alphabet:
-                child = dfa.delta(node.stat, trans)
-                if child == "sink":
-                    continue
-                if child not in checked:
-                    unchecked.append(child)
-                    node.add_child(Node(child))
-
-            for leaf in node.children:
-                self.construct_T_rec(dfa, leaf, unchecked, checked)
 
 class Node(object):
-    def __init__(self, stat):
-        self.stat = stat
+    def __init__(self, state):
+        self.state = state
         self.children = []
 
     def add_child(self, obj):
@@ -122,4 +125,16 @@ class Node(object):
 
 
 
+
 if __name__ == '__main__':
+    dfa = DFAParser.from_dict(
+    {'accepts': {2},
+    'start': 0,
+    'transitions': {0: {'a': 1  , 'b': 1}, 1: {'a': 0, 'b': 2}, 2: {'a': 2, 'b': 0}}}
+    )
+    
+    teacher = Teacher(dfa)
+    tree = teacher.construct_tree()
+    for node in tree:
+        print(node.state)
+        print(node.children)

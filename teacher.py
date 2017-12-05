@@ -112,9 +112,17 @@ class Teacher:
         
         node_list.append(node)
         return node
-            
+    
+    def degree(self, tree):
+        if len(tree.children) == 0:
+            return 1;
 
+        children_depth = []
+        
+        for k, node in tree.children.items():
+            children_depth.append(self.degree(node))
 
+        return max(children_depth) + 1
 
 class Node(object):
     def __init__(self, state):
@@ -125,10 +133,10 @@ class Node(object):
         self.children[trans] = obj
 
 
-def recursive_print_tree(node, depth=0):
-    print('   ' * depth + str(node.state))
+def recursive_print_tree(node, trans, depth=0):
+    print('   ' * depth + trans + ': ' + str(node.state))
     for k, v in node.children.items():
-        recursive_print_tree(v, depth+1)
+        recursive_print_tree(v, k, depth+1)
 
 
 if __name__ == '__main__':
@@ -140,4 +148,5 @@ if __name__ == '__main__':
     
     teacher = Teacher(dfa)
     tree = teacher.construct_tree()
-    recursive_print_tree(tree[-1])
+    print("Degree: " + str(teacher.degree(tree[-1])))
+    recursive_print_tree(tree[-1], 'st')

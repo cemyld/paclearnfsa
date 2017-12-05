@@ -104,13 +104,14 @@ class Teacher:
             if child == "sink":
                 continue
             elif child in checked:
-                node.add_child({alph: child})
+                node.add_child(alph, Node(child))
             else:
                 unchecked.append(child)
-                node.add_child({alph: child})
-                self.construct_tree_rec(Node(child), checked, unchecked, node_list)
+                node.add_child(alph, self.construct_tree_rec(Node(child), checked, unchecked, node_list))
+                
         
         node_list.append(node)
+        return node
             
 
 
@@ -118,12 +119,16 @@ class Teacher:
 class Node(object):
     def __init__(self, state):
         self.state = state
-        self.children = []
+        self.children = {}
 
-    def add_child(self, obj):
-        self.children.append(obj)
+    def add_child(self, trans, obj):
+        self.children[trans] = obj
 
 
+def recursive_print_tree(node, depth=0):
+    print('   ' * depth + str(node.state))
+    for k, v in node.children.items():
+        recursive_print_tree(v, depth+1)
 
 
 if __name__ == '__main__':
@@ -135,6 +140,4 @@ if __name__ == '__main__':
     
     teacher = Teacher(dfa)
     tree = teacher.construct_tree()
-    for node in tree:
-        print(node.state)
-        print(node.children)
+    recursive_print_tree(tree[-1])

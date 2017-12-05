@@ -75,10 +75,32 @@ class Teacher:
         else:
             return '-'
 
+
+    # generate |T(A)|
     def construct_char_set(self):
         '''Construct a characteristic set of the DFA, TODO'''
-        return
 
+        tree = self.construct_tree()
+        start_node = tree[-1]
+        degree = self.degree(start_node)
+        char_set = []
+        self.paths(start_node, '', '', char_set)
+
+        return list(filter(None, char_set))
+    
+    def paths(self, start, string ,trans, char_set):
+        string += trans
+        if len(start.children) == 0:
+            char_set.append(string)
+            return
+
+        for k, v in start.children.items():
+            if string not in char_set:
+                char_set.append(string)
+
+            self.paths(v, string, k, char_set)
+
+                
     def construct_tree(self):
         '''Construct a tree T of given DFA'''
 
@@ -115,7 +137,7 @@ class Teacher:
     
     def degree(self, tree):
         if len(tree.children) == 0:
-            return 1;
+            return 1
 
         children_depth = []
         
@@ -150,3 +172,5 @@ if __name__ == '__main__':
     tree = teacher.construct_tree()
     print("Degree: " + str(teacher.degree(tree[-1])))
     recursive_print_tree(tree[-1], 'st')
+
+    print(teacher.construct_char_set())

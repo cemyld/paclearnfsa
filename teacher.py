@@ -1,5 +1,6 @@
 import DFA.DFA as DFA
 import random
+import dfa_parser as DFAParser
 
 
 max_iter_counter = 2000
@@ -73,3 +74,79 @@ class Teacher:
             return '+'
         else:
             return '-'
+
+    def construct_char_set(self):
+        '''Construct a characteristic set of the DFA, TODO'''
+        return
+
+    def construct_tree(self):
+        '''Construct a tree T of given DFA'''
+
+        checked = []
+        unchecked = []
+        node_list = []
+        start = Node(self.dfa.start)
+        unchecked.append(start.state)
+        self.construct_tree_rec(start, checked, unchecked, node_list)
+        return node_list 
+
+
+    def construct_tree_rec(self, node, checked, unchecked, node_list):
+        '''recursive part'''
+        if len(unchecked) == 0:
+            return
+
+        unchecked.remove(node.state)
+        checked.append(node.state)
+
+        for alph in self.dfa.alphabet:
+            child = self.dfa.delta(node.state, alph)
+            if child == "sink":
+                continue
+            elif child in checked:
+                node.add_child(alph, Node(child))
+            else:
+                unchecked.append(child)
+                node.add_child(alph, self.construct_tree_rec(Node(child), checked, unchecked, node_list))
+                
+        
+        node_list.append(node)
+        return node
+    
+    def degree(self, tree):
+        if len(tree.children) == 0:
+            return 1;
+
+        children_depth = []
+        
+        for k, node in tree.children.items():
+            children_depth.append(self.degree(node))
+
+        return max(children_depth) + 1
+
+class Node(object):
+    def __init__(self, state):
+        self.state = state
+        self.children = {}
+
+    def add_child(self, trans, obj):
+        self.children[trans] = obj
+
+
+def recursive_print_tree(node, trans, depth=0):
+    print('   ' * depth + trans + ': ' + str(node.state))
+    for k, v in node.children.items():
+        recursive_print_tree(v, k, depth+1)
+
+
+if __name__ == '__main__':
+    dfa = DFAParser.from_dict(
+    {'accepts': {2},
+    'start': 0,
+    'transitions': {0: {'a': 1  , 'b': 1}, 1: {'a': 0, 'b': 2}, 2: {'a': 2, 'b': 0}}}
+    )
+    
+    teacher = Teacher(dfa)
+    tree = teacher.construct_tree()
+    print("Degree: " + str(teacher.degree(tree[-1])))
+    recursive_print_tree(tree[-1], 'st')

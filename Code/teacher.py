@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 import DFA.DFA as DFA
 import random
 import dfa_parser as DFAParser

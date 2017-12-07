@@ -1,33 +1,8 @@
 import DFA.DFA as DFA
-from IPython import embed
 import dfa_grapher as dfg
 from copy import deepcopy
 import shutil
 import os
-# def merge(state1, state2, dfa):
-#     '''
-#     Merges state2 into state1 and removes state2
-#     '''
-#     transitions = dfa.transitions
-#     for s in dfa.states:
-#         if s in transitions:
-#             for token in transitions[s]:
-#                 if state2 in transitions[s][token]:
-#                     transitions[s][token] = state1
-#         if state2 in transitions:
-#             for token in transitions[state2]:
-#                 if s in transitions[state2][token]:
-#                     transitions[state1][token] = s
-#     if dfa.start == state2:
-#         dfa.start = state1
-#     if state2 in dfa.accepts:
-#         dfa.accepts = dfa.accepts.difference({state2}).union({state1})
-#     if state2 in transitions:
-#         del transitions[state2]
-#     dfa.states.remove(state2)
-#     dfa.transitions = transitions
-#     return dfa
-
 
 def choose(dfa, states):
     '''
@@ -167,7 +142,6 @@ class Learner:
                 temp_dfa = 0
 
             if temp_dfa != 0:
-                # embed()
                 if blue in self.blues:
                     self.blues.remove(blue)
                 dfa = temp_dfa

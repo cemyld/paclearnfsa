@@ -1,7 +1,13 @@
-import pygraphviz as pgv
+import sys
+try:
+    import pygraphviz as pgv
+except Exception as e:
+    print("Could not import pygraphviz library, will continue without graphing function.")
 
 
 def get_graph(dfa):
+    if not 'pygraphviz' in sys.modules:
+        return
 
     G = pgv.AGraph(strict=False, directed=True, rankdir='LR')
 
@@ -28,11 +34,15 @@ def get_graph(dfa):
 
 
 def draw_dfa(dfa, filepath='dfa_graph.png'):
+    if not 'pygraphviz' in sys.modules:
+        return
     G = get_graph(dfa)
     G.layout('dot')
     G.draw(filepath)
 
 def draw_dfa_colored(dfa, reds, blues, filepath='dfa_graph.png'):
+    if not 'pygraphviz' in sys.modules:
+        return
     G = get_graph(dfa)
 
     #colorize reds

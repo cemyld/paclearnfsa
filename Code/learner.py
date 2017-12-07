@@ -96,7 +96,7 @@ class Learner:
     def draw(self, dfa, filepath='rpni/rpni', operation=''):
         if not self.drawsteps:
             return
-        print('Drawing {}'.format(self.draw_counter))
+        # print('Drawing {}'.format(self.draw_counter))
         dfg.draw_dfa_colored(dfa, self.reds, self.blues, '{}_{}_{}.png'.format(
             filepath, self.draw_counter, operation))
         self.draw_counter += 1
@@ -111,8 +111,8 @@ class Learner:
 
     def rpni_fold(self, dfa, red_state, blue_state):
         '''folds blue_state into red_state'''
-        print('Folding red:{} and blue:{}'.format(
-            red_state, blue_state))
+        # print('Folding red:{} and blue:{}'.format(
+        #     red_state, blue_state))
 
         transitions = dfa.transitions
         if blue_state in dfa.accepts:
@@ -127,7 +127,7 @@ class Learner:
                 else:
                     transitions[red_state][token] = transitions[blue_state][token]
                     del transitions[blue_state][token]
-                    print('Removed state {}'.format(blue_state))
+                    # print('Removed state {}'.format(blue_state))
                     if blue_state in self.blues:
                         self.blues.remove(blue_state)
                     if blue_state in self.reds:
@@ -141,8 +141,8 @@ class Learner:
         return dfa
 
     def rpni_merge(self, dfa, red_state, blue_state):
-        print('Merging red:{} and blue:{}'.format(
-            red_state, blue_state))
+        # print('Merging red:{} and blue:{}'.format(
+        #     red_state, blue_state))
         for state, state_trans in dfa.transitions.items():
             for token, next_state in state_trans.items():
                 if next_state == blue_state:
@@ -162,7 +162,7 @@ class Learner:
             for red in list(self.reds):
                 temp_dfa = self.rpni_merge(deepcopy(dfa), red, blue)
                 if rpni_compatible(temp_dfa, neg_examples):
-                    print('compatible')
+                    # print('compatible')
                     break
                 temp_dfa = 0
 

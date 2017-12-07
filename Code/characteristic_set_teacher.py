@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 import teacher as teacher
 import dfa_parser as DFAParser
 

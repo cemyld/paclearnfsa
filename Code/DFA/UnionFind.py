@@ -18,7 +18,7 @@ class UnionFind():
         """Merges set1 into set2"""
         assert(set1 in self.sets)
         assert(set2 in self.sets)
-        for (item, value) in self.lookup.iteritems():
+        for item, value in self.lookup.items():
             if value == set1:
                 self.lookup[item] = set2
         self.sets.remove(set1)

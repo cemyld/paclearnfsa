@@ -16,18 +16,20 @@ class TestCharacteristicSetTeacher(unittest.TestCase):
 
         teacher = csteacher.CharacteristicSetTeacher(dfa)
         result = teacher.construct_char_set()
-        self.assertCountEqual(result, ['a'])   
+        self.assertCountEqual(result[0], ['a'])
+        self.assertCountEqual(result[1], []) 
 
     def test_single_path(self):
         dfa = DFAParser.from_dict(
-        {'accepts': {2},
+        {'accepts': {3},
         'start': 0,
         'transitions': {0: {'a': 1}, 1: {'a': 2}, 2: {'b': 3}}})
 
         teacher = csteacher.CharacteristicSetTeacher(dfa)
         result = teacher.construct_char_set()
-        self.assertCountEqual(result, ['a', 'aa', 'aab'])
-
+        self.assertCountEqual(result[0], ['aab'])
+        self.assertCountEqual(result[1], ['a', 'aa'])
+        
 
     def test_simple_dfa(self):
         dfa = DFAParser.from_dict(
@@ -37,9 +39,8 @@ class TestCharacteristicSetTeacher(unittest.TestCase):
 
         teacher = csteacher.CharacteristicSetTeacher(dfa)
         result = teacher.construct_char_set()
-        self.assertCountEqual(result, ['a', 'ab', 'abb', 'aba', 'aa'])
-
-
+        self.assertCountEqual(result[0], ['ab', 'aba'])
+        self.assertCountEqual(result[1], ['a', 'abb', 'aa'])
 
 
 if __name__ == '__main__':

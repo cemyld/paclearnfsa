@@ -16,10 +16,19 @@ class CharacteristicSetTeacher(teacher.Teacher):
         tree = self.construct_tree()
         start_node = tree[-1] # the last in the list is the starting node
         degree = self.degree(start_node)
-        char_set = []
-        self.all_paths(start_node, '', '', char_set)
+        TA = []
+        self.all_paths(start_node, '', '', TA)
+        
+        TA = list(filter(None, TA))
 
-        return list(filter(None, char_set))
+        result = [[], []]
+        for item in TA:
+            if self.dfa.recognizes(item): # put positive example in first list
+                result[0].append(item)
+            else:
+                result[1].append(item) # put negative example in first list
+
+        return result
     
     def all_paths(self, start, string ,trans, char_set):
         '''Recursively traversal throught the tree'''

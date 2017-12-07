@@ -78,10 +78,10 @@ class Teacher:
 
     # generate |T(A)|
     def construct_char_set(self):
-        '''Construct a characteristic set of the DFA, TODO'''
+        '''Construct a characteristic set of the DFA'''
 
         tree = self.construct_tree()
-        start_node = tree[-1]
+        start_node = tree[-1] # the last in the list is the starting node
         degree = self.degree(start_node)
         char_set = []
         self.paths(start_node, '', '', char_set)
@@ -89,6 +89,7 @@ class Teacher:
         return list(filter(None, char_set))
     
     def paths(self, start, string ,trans, char_set):
+        '''Recursively traversal throught the tree'''
         string += trans
         if len(start.children) == 0:
             char_set.append(string)
@@ -102,7 +103,7 @@ class Teacher:
 
                 
     def construct_tree(self):
-        '''Construct a tree T of given DFA'''
+        '''Construct a tree T(A) of given DFA'''
 
         checked = []
         unchecked = []
@@ -114,7 +115,7 @@ class Teacher:
 
 
     def construct_tree_rec(self, node, checked, unchecked, node_list):
-        '''recursive part'''
+        '''recursive constructing tree'''
         if len(unchecked) == 0:
             return
 
@@ -125,7 +126,7 @@ class Teacher:
             child = self.dfa.delta(node.state, alph)
             if child == "sink":
                 continue
-            elif child in checked:
+            elif child in checked: # if children already check, don't go into it
                 node.add_child(alph, Node(child))
             else:
                 unchecked.append(child)
@@ -135,27 +136,31 @@ class Teacher:
         node_list.append(node)
         return node
     
-    def degree(self, tree):
-        if len(tree.children) == 0:
+    def degree(self, tree_node):
+        '''Find the degree(depth) of the tree'''
+        if len(tree_node.children) == 0:
             return 1
 
         children_depth = []
         
-        for k, node in tree.children.items():
+        for k, node in tree_node.children.items():
             children_depth.append(self.degree(node))
 
         return max(children_depth) + 1
 
+
 class Node(object):
+    '''Node class for the tree'''
     def __init__(self, state):
         self.state = state
-        self.children = {}
+        self.children = {} # children are stored like {transistion: Node(state)}
 
     def add_child(self, trans, obj):
         self.children[trans] = obj
 
 
-def recursive_print_tree(node, trans, depth=0):
+def recursive_print_tree(node, trans='s', depth=0):
+    '''Printing the tree in a more human readable form'''
     print('   ' * depth + trans + ': ' + str(node.state))
     for k, v in node.children.items():
         recursive_print_tree(v, k, depth+1)
@@ -171,6 +176,6 @@ if __name__ == '__main__':
     teacher = Teacher(dfa)
     tree = teacher.construct_tree()
     print("Degree: " + str(teacher.degree(tree[-1])))
-    recursive_print_tree(tree[-1], 'st')
+    recursive_print_tree(tree[-1])
 
     print(teacher.construct_char_set())

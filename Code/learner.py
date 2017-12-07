@@ -156,27 +156,29 @@ class Learner:
         self.blues = {next_state for token,
                       next_state in dfa.transitions[dfa.start].items()}
         self.draw(dfa=dfa, operation='pta')
-        while self.blues:
+        while len(self.blues) > 0:
+            temp_dfa = 0
             blue = choose(dfa, self.blues)
             for red in list(self.reds):
                 temp_dfa = self.rpni_merge(deepcopy(dfa), red, blue)
                 if rpni_compatible(temp_dfa, neg_examples):
                     print('compatible')
-                    # embed()
-                    if blue in self.blues:
-                        self.blues.remove(blue)
-                    dfa = temp_dfa
-                    for r_state in self.reds:
-                        for token, next_state in dfa.transitions[r_state].items():
-                            if next_state not in self.reds:
-                                self.blues.add(next_state)
-                    self.draw(dfa=dfa, operation='merge')
-                else:
-                    self.draw(dfa=temp_dfa, operation='counterex_{}'.format(
-                        get_counterexample(temp_dfa, neg_examples)))
-                    self.rpni_promote(dfa, blue)
-                    self.draw(dfa=dfa, operation='promoted')
+                    break
+                temp_dfa = 0
 
+            if temp_dfa != 0:
+                # embed()
+                if blue in self.blues:
+                    self.blues.remove(blue)
+                dfa = temp_dfa
+                for r_state in self.reds:
+                    for token, next_state in dfa.transitions[r_state].items():
+                        if next_state not in self.reds:
+                            self.blues.add(next_state)
+                self.draw(dfa=dfa, operation='merge')
+            else:
+                self.rpni_promote(dfa, blue)
+                self.draw(dfa=dfa, operation='promoted')
         return dfa
 
 

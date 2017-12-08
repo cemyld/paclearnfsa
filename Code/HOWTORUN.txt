@@ -1,0 +1,69 @@
+BUILDING THE PROJECT
+====================
+Some dependencies need to be installed in order to run the project correctly. 
+The dependency packages are listed in the file requirements.txt.
+
+Before installing the required python packages, you need to install graphviz. 
+Run this command to install in an ubuntu/debian system:
+
+$ sudo apt-get update
+$ sudo apt-get install graphviz
+
+It is recommended to install the python packages in a virtual environment to 
+prevent making inappropiate changes to the OS pyhton configuration. In CDF 
+you can enter the virtual environment with these commands:
+
+$ python3 -m venv .
+$ source bin/activate
+
+After entering the virtual environment you can automatically install the 
+dependency packages with this command (make sure you are in the root project 
+directory):
+
+$ pip install -r Code/requirements.txt
+
+RUNNING
+======
+
+The PAC Learning Automata has two section, teacher and learner.
+
+Teacher part: We need to create DFA to initialize the teacher class. 
+DFA can either created by initializing the DFA object with its set of 
+states, alphabet, starting state, accepted states and transitions which 
+is encoded as a dictionary object with keys as states and values as another 
+dictionary which encodes the alphabet letter as key and next transition state
+as value. 
+
+DFA also can be created by the function from_dict in dfa_parser.py. This 
+function takes in a python dictionary with a format like this:
+
+{
+   'accepts': {}
+   'start' : ''
+   'transitions': { 
+      state: {
+         token:next_state, ...
+      }, ...
+}
+The accepting states, starting state, state transitions are added in 
+the appropriate fields like this:
+   - 'accepts' : list of accepting states in the DFA.
+   - 'start' : the starting state of the DFA
+   - 'transitions' : a dictionary of state transitions in the DFA for 
+                     each state. Each state is listed as a key in the 
+                     dictionary, and the corresponding values are pairs
+                     of transition names and their destinations.
+
+An example input where a and b are states and 0 and 1 are transitions:
+{
+   'accepts': {b},
+   'start': {a},
+   'transitions': {
+      a: {0: a,1: b},
+      b: {0: b, 1: a}
+   }
+}
+
+The function to_dict in the same file does the reverse; it converts a 
+DFA object to a dictionary in the same format we used as the input.
+

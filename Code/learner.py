@@ -170,5 +170,7 @@ if __name__ == '__main__':
         shutil.rmtree(dir, ignore_errors=True)
     os.makedirs(dir)
 
-    l = Learner(drawsteps=True)
-    l.rpni(['aaa', 'aaba', 'bba', 'bbaba'], ['a', 'bb', 'aab', 'aba'])
+    l = Learner(drawsteps=False)
+
+    l.rpni(['a'], ['aa', 'aaa'])
+

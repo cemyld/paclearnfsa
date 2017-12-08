@@ -1,0 +1,8 @@
+char_set_teacher_tests:
+- Check if the char_set_teacher_tests generates the correct characteristic set
+- Since characteristic sets can be different, only small DFAs are tested
+
+cteacher_learner_test:
+- test one and two are DFA from the papers, using them as a standard
+- there are some tests on edge cases such as one node
+- Then there are some tests cases on large DFAs

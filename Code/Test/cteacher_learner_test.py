@@ -98,7 +98,22 @@ class TestCharacteristicSetTeacher(unittest.TestCase):
         for neg_sample in samples[1]:
             self.assertFalse(learned_dfa.recognizes(neg_sample))
 
+    def test_unreachable_state(self):
+        dfa = DFAParser.from_dict(
+            {'accepts': {0, 1},
+             'start': 0,
+             'transitions': {0: {'a': 1}, 1: {'a': 0}, 2: {'b': 3}}})
 
+        t = csteacher.CharacteristicSetTeacher(dfa)
+        samples = t.construct_char_set()
+
+        l = Learner(drawsteps=False)
+        learned_dfa = l.rpni(samples[0], samples[1])
+        for pos_sample in samples[0]:
+            self.assertTrue(learned_dfa.recognizes(pos_sample))
+
+        for neg_sample in samples[1]:
+            self.assertFalse(learned_dfa.recognizes(neg_sample))
 
     def test_big_dfa(self):
         dfa = DFAParser.from_dict(
@@ -108,7 +123,7 @@ class TestCharacteristicSetTeacher(unittest.TestCase):
 
         t = csteacher.CharacteristicSetTeacher(dfa)
         samples = t.construct_char_set()
-      
+
         l = Learner(drawsteps=False)
         learned_dfa = l.rpni(samples[0], samples[1])
         

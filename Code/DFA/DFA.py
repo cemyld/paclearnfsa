@@ -644,7 +644,13 @@ def from_word_list(language, alphabet):
     if 'b' in states:
         transitions[start]['b'] = 'b'
 
-    return DFA(states=states, alphabet=alphabet, delta=None, start=start, accepts=accepts, transitions=transitions)
+    transitions_copy = transitions.copy()
+    for k, v in transitions.items():
+        for x, z in transitions[k].items():
+            if z not in transitions:
+                transitions_copy[z] = {}
+
+    return DFA(states=states, alphabet=alphabet, delta=None, start=start, accepts=accepts, transitions=transitions_copy)
 
 
 def modular_zero(n, base=2):

@@ -133,6 +133,7 @@ class Learner:
         self.blues = {next_state for token,
                       next_state in dfa.transitions[dfa.start].items()}
         self.draw(dfa=dfa, operation='pta')
+
         while len(self.blues) > 0:
             temp_dfa = 0
             blue = choose(dfa, self.blues)
@@ -172,5 +173,5 @@ if __name__ == '__main__':
 
     l = Learner(drawsteps=False)
 
-    l.rpni(['a'], ['aa', 'aaa'])
+    l.rpni(['aa', 'aaa', 'aaab', 'aba', 'b', 'babab'], ['a', 'ab', 'ba', 'bab', 'baba'])
 

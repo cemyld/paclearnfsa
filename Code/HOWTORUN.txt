@@ -7,7 +7,7 @@ Before installing the required python packages, you need to install graphviz.
 Run this command to install in an ubuntu/debian system:
 
 $ sudo apt-get update
-$ sudo apt-get install graphviz
+$ sudo apt-get install python-dev graphviz libgraphviz-dev pkg-config
 
 It is recommended to install the python packages in a virtual environment to 
 prevent making inappropiate changes to the OS pyhton configuration. In CDF 

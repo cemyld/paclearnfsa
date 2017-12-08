@@ -67,6 +67,8 @@ class Learner:
         self.blues = None
         self.draw_counter = 0
         self.drawsteps = drawsteps
+        self.learned_dfa = None
+        self.examples = set()
 
     def draw(self, dfa, filepath='rpni/rpni', operation=''):
         if not self.drawsteps:
@@ -154,6 +156,12 @@ class Learner:
                 self.rpni_promote(dfa, blue)
                 self.draw(dfa=dfa, operation='promoted')
         return dfa
+
+    def query_learn(self, example):
+        self.examples.update(example)
+        return self.rpni([sample[0] for sample in self.examples if sample[1]=='+'], [sample[0] for sample in self.examples if sample[1]=='-'])
+      
+
 
 
 if __name__ == '__main__':

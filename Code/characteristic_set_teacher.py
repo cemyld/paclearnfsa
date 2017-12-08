@@ -9,6 +9,13 @@ class CharacteristicSetTeacher(teacher.Teacher):
     def __init__(self, dfa):
         teacher.Teacher.__init__(self, dfa)
         
+        self.char_set = self.construct_char_set()
+        self.pos_example = self.char_set[0]
+        self.neg_example = self.char_set[1]
+        self.used_pos = []
+        self.used_neg = []
+
+        
     # generate |T(A)|
     def construct_char_set(self):
         '''Construct a characteristic set of the DFA'''
@@ -29,6 +36,28 @@ class CharacteristicSetTeacher(teacher.Teacher):
                 result[1].append(item) # put negative example in first list
 
         return result
+
+    def get_pos_example(self):
+        ''' Overwrite teacher's get_pos_example, here you will only get examples from character sets '''
+
+        if len(self.used_pos) == len(self.pos_example):
+            self.used_pos = []
+
+        for example in self.pos_example:
+            if example not in self.used_pos:
+                self.used_pos.append(example)
+                return(example, '+')
+        
+    def get_neg_example(self):
+        ''' Overwrite teacher's get_neg_example, here you will only get examples from character sets '''
+  
+        if len(self.used_neg) == len(self.pos_example):
+            self.used_neg = []
+
+        for example in self.neg_example:
+            if example not in self.used_neg:
+                self.used_neg.append(example)
+                return(example, '-')
     
     def all_paths(self, start, string ,trans, char_set):
         '''Recursively traversal throught the tree'''
@@ -120,4 +149,7 @@ if __name__ == '__main__':
     print("Degree: " + str(teacher.degree(tree[-1])))
     recursive_print_tree(tree[-1])
 
-    print(teacher.construct_char_set())
+    print(teacher.char_set)
+    for i in range(50):
+        print(teacher.get_pos_example())
+        print(teacher.get_neg_example())

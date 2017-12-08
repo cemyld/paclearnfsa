@@ -1,3 +1,5 @@
+The test files can be found in the Code/Test directory.
+
 Description of testcases:
 
 char_set_teacher_tests:

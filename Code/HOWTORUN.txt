@@ -67,3 +67,11 @@ An example input where a and b are states and 0 and 1 are transitions:
 The function to_dict in the same file does the reverse; it converts a 
 DFA object to a dictionary in the same format we used as the input.
 
+
+The rest of the functionality can be used with running the tests. The tests are run like this:
+
+$ cd Code/Test
+$ python char_set_teacher_tests.py
+$ python cteacher_learner_test.py
+
+Note: The cd to the Code/Tests directory is mandatory. The tests can only be run from inside the Test directory. 
